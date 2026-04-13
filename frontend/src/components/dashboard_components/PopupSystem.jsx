@@ -1,21 +1,12 @@
 import React from "react";
-// In PopupSystem component
 import './PopupSystem.css';
-
-// In VoiceInput component  
 import './popups/SpeakPopup.css';
-
-// In FontSizePopup component
 import './popups/FontSizePopup.css';
-
-// In RecentHighlights component
 import './popups/RecentPopup.css';
-
-// In SettingsPopup component
 import './popups/SettingsPopup.css';
 
-import SpeakPopup from "./popups/SpeakPopup";
-import RecentPopup from "./popups/RecentPopup";
+import SpeakPopup    from "./popups/SpeakPopup";
+import RecentPopup   from "./popups/RecentPopup";
 import FontSizePopup from "./popups/FontSizePopup";
 import SettingsPopup from "./popups/SettingsPopup";
 
@@ -29,10 +20,14 @@ const PopupSystem = ({
   setFontSize,
   darkMode,
   setDarkMode,
+  autoReadEnabled,
+  setAutoReadEnabled,
+  // New mode props
+  queryMode,
+  setQueryMode,
+  // Legacy props (still forwarded for backward compat)
   transformerMode,
   setTransformerMode,
-  autoReadEnabled,
-  setAutoReadEnabled
 }) => {
   const closePopup = () => setActivePopup(null);
   if (!activePopup) return null;
@@ -40,9 +35,11 @@ const PopupSystem = ({
   return (
     <div className="popup-overlay" onClick={closePopup}>
       <div className="popup-container" onClick={(e) => e.stopPropagation()}>
+
         {activePopup === "speak" && (
           <SpeakPopup onClose={closePopup} setQuery={setQuery} />
         )}
+
         {activePopup === "recent" && (
           <RecentPopup
             recentHighlights={recentHighlights}
@@ -51,6 +48,7 @@ const PopupSystem = ({
             onClose={closePopup}
           />
         )}
+
         {activePopup === "fontSize" && (
           <FontSizePopup
             fontSize={fontSize}
@@ -58,17 +56,21 @@ const PopupSystem = ({
             onClose={closePopup}
           />
         )}
+
         {activePopup === "settings" && (
           <SettingsPopup
             darkMode={darkMode}
             setDarkMode={setDarkMode}
-            transformerMode={transformerMode}
-            setTransformerMode={setTransformerMode}
             autoReadEnabled={autoReadEnabled}
             setAutoReadEnabled={setAutoReadEnabled}
+            queryMode={queryMode}
+            setQueryMode={setQueryMode}
+            transformerMode={transformerMode}
+            setTransformerMode={setTransformerMode}
             onClose={closePopup}
           />
         )}
+
       </div>
     </div>
   );

@@ -662,3 +662,55 @@
   white-space: nowrap;
   border: 0;
 }
+/* ── Knowledge Mode Button ─────────────────────────────────────────────────── */
+:root {
+  --knowledge-mode-color: #7c3aed;
+  --knowledge-mode-bg: rgba(124, 58, 237, 0.1);
+  --neural-mode-color: #10a37f;
+  --neural-mode-bg: rgba(16, 163, 127, 0.1);
+  --account-mode-color: #3b82f6;
+  --account-mode-bg: rgba(59, 130, 246, 0.1);
+}
+
+/* Rename database-mode → account-mode (keep database-mode for backward compat) */
+.mode-toggle-btn.account-mode.active,
+.mode-toggle-btn.database-mode.active {
+  background: linear-gradient(135deg, var(--account-mode-color), #2563eb);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.mode-toggle-btn.account-mode.active:hover,
+.mode-toggle-btn.database-mode.active:hover {
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Neural mode (replaces ai-mode) */
+.mode-toggle-btn.neural-mode.active,
+.mode-toggle-btn.ai-mode.active {
+  background: linear-gradient(135deg, var(--neural-mode-color), #0d8f6f);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 163, 127, 0.3);
+  transform: translateY(-1px);
+}
+
+.mode-toggle-btn.neural-mode.active:hover,
+.mode-toggle-btn.ai-mode.active:hover {
+  box-shadow: 0 6px 16px rgba(16, 163, 127, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Knowledge mode */
+.mode-toggle-btn.knowledge-mode.active {
+  background: linear-gradient(135deg, var(--knowledge-mode-color), #6d28d9);
+  color: white;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.mode-toggle-btn.knowledge-mode.active:hover {
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+  transform: translateY(-2px);
+}

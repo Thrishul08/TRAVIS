@@ -8,252 +8,236 @@ import PopupSystem from "../../components/dashboard_components/PopupSystem";
 import Footer from "../../components/dashboard_components/Footer";
 import { containsSensitiveInfo } from "../../utils/securityUtils";
 
-// API base
 const API_BASE_URL = "http://localhost:5000";
 
+/**
+ * queryMode: "account" | "neural" | "knowledge"
+ *   account   → DB mode  — secure customer data lookups
+ *   neural    → AI mode  — custom seq2seq transformer
+ *   knowledge → RAG mode — knowledge base retrieval
+ */
+
 const Dashboard = ({ darkMode, setDarkMode, fontSize, setFontSize, showAlert }) => {
-  const [query, setQuery] = useState("");
-  const [response, setResponse] = useState(null);
+  const [query, setQuery]                     = useState("");
+  const [response, setResponse]               = useState(null);
   const [translatedResponse, setTranslatedResponse] = useState(null);
-  const [responseCategory, setResponseCategory] = useState(null);
-  const [lastQuery, setLastQuery] = useState("");
-  const [activePopup, setActivePopup] = useState(null);
+  const [responseCategory, setResponseCategory]     = useState(null);
+  const [lastQuery, setLastQuery]             = useState("");
+  const [activePopup, setActivePopup]         = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [autoReadEnabled, setAutoReadEnabled] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [queryHistory, setQueryHistory] = useState([]);
+  const [isTranslating, setIsTranslating]     = useState(false);
+  const [queryHistory, setQueryHistory]       = useState([]);
   const [recentHighlights, setRecentHighlights] = useState([]);
-  const [transformerMode, setTransformerMode] = useState(() => {
-    // Try to get saved value from localStorage
-    const saved = localStorage.getItem("transformerMode");
-    return saved !== null ? JSON.parse(saved) : true; // DEFAULT: true
+
+  // ── Mode state (replaces boolean transformerMode) ──────────────────────────
+  const [queryMode, setQueryMode] = useState(() => {
+    return localStorage.getItem("queryMode") || "neural";
   });
 
-  // Save to localStorage whenever transformerMode changes
   useEffect(() => {
-    localStorage.setItem("transformerMode", JSON.stringify(transformerMode));
-  }, [transformerMode]);
+    localStorage.setItem("queryMode", queryMode);
+  }, [queryMode]);
 
-  // Clear account number on page refresh/reload
+  // Clear account number and response on mode change
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.removeItem("savedAccountNumber");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  // Reset state when transformer mode changes
-  useEffect(() => {
-    // Clear any pending queries and reset state when mode changes
     setQuery("");
     setResponse(null);
     setTranslatedResponse(null);
     setResponseCategory(null);
     setLastQuery("");
     localStorage.removeItem("savedAccountNumber");
-  }, [transformerMode]);
+  }, [queryMode]);
+
+  // Clear account number on page unload
+  useEffect(() => {
+    const clear = () => localStorage.removeItem("savedAccountNumber");
+    window.addEventListener("beforeunload", clear);
+    return () => window.removeEventListener("beforeunload", clear);
+  }, []);
 
   const dashboardClasses = `dashboard ${darkMode ? "dark-mode" : ""} ${response ? "response-active" : ""} font-size-${fontSize}`;
 
+  // ── Utilities ──────────────────────────────────────────────────────────────
+
   const speak = (text) => {
     if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US";
-      utterance.rate = 1;
-      window.speechSynthesis.speak(utterance);
-      console.log("Voice output");
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang  = "en-US";
+      u.rate  = 1;
+      window.speechSynthesis.speak(u);
     } else {
       alert("Text-to-Speech not supported in this browser.");
     }
   };
 
-  const trackQuery = (type, queryText, category) => {
-    console.log(`Tracking ${type} query: ${queryText} (${category})`);
-    fetchQueryHistory();
+  const logError = (type, msg) => console.error(`[${type}]`, msg);
+
+  const fetchQueryHistory = () => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) return;
+    fetch(`${API_BASE_URL}/api/query/history?limit=3&sort=-createdAt`, {
+      headers: { "auth-token": token },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        setQueryHistory(data);
+        setRecentHighlights(
+          data.slice(0, 3).map((e, i) => ({
+            id: i + 1,
+            query: e.query,
+            response: e.response,
+            category: e.category || "General",
+          }))
+        );
+      })
+      .catch((err) => console.error("Error fetching history:", err));
   };
 
-  const logError = (errorType, errorMessage) => {
-    console.error(`[${errorType}]`, errorMessage);
-  };
-
-
-const handleQuerySubmit = async (e) => {
-  if (e) e.preventDefault();
-  if (!query.trim()) return;
-
-  const currentQuery = query.trim();
-  const authToken = sessionStorage.getItem("auth-token");
-  if (!authToken) {
-    showAlert("You need to be logged in to use this feature.");
-    return;
-  }
-
-  console.log("Submitting query:", currentQuery, "Mode:", transformerMode ? "transformer" : "customer");
-
-  setLastQuery(currentQuery);
-  setQuery("");
-  setTranslatedResponse(null);
-
-  const isSecureQuery = containsSensitiveInfo(currentQuery);
-  const BASE_ROUTE = transformerMode ? "query" : "customers";
-
-  try {
-    if (!transformerMode && isSecureQuery) {
-      // Handle secure queries
-      const accountNumber = await promptForAccountNumber();
-      if (!accountNumber) {
+  const promptForAccountNumber = () =>
+    new Promise((resolve) => {
+      const stored = localStorage.getItem("savedAccountNumber");
+      if (stored && response && /^[A-Z]{2}\d{10}$/.test(stored)) {
+        resolve(stored);
         return;
       }
-
-      console.log("Making secure query request to:", `${API_BASE_URL}/api/${BASE_ROUTE}/secureQuery`);
-      const response = await fetch(`${API_BASE_URL}/api/${BASE_ROUTE}/secureQuery`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "auth-token": authToken,
-        },
-        body: JSON.stringify({ query: currentQuery, accountNumber }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setResponse(data.response || "No response received");
-        setResponseCategory(data.category || "Secure");
-        if (autoReadEnabled) speak(data.response);
-        trackQuery("secure", currentQuery, data.category);
-      } else {
-        setResponse(data.error || "An error occurred while processing the query");
-        setResponseCategory("Error");
-        logError("Secure query error", data.error);
-      }
-    } else {
-      // Handle transformer mode or non-secure customer queries
-      console.log("Making general query request to:", `${API_BASE_URL}/api/${BASE_ROUTE}/`);
-      // console.log("Making category prediction request to:", `http://127.0.0.1:5001/api/classify`);
-
-      // Perform both requests concurrently
-      const [queryResponse, catResponse] = await Promise.all([
-        fetch(`${API_BASE_URL}/api/${BASE_ROUTE}/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": authToken,
-          },
-          body: JSON.stringify({ query: currentQuery }),
-        }).then(res => res.json().then(data => ({ ok: res.ok, data }))),
-        fetch(`${API_BASE_URL}/api/${BASE_ROUTE}/category`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": authToken,
-          },
-          body: JSON.stringify({ query: currentQuery }),
-        }).then(res => res.json().then(data => ({ ok: res.ok, data }))),
-      ]);
-
-      // Handle query response
-      if (queryResponse.ok) {
-        setResponse(queryResponse.data.response || "No response received");
-      } else {
-        setResponse(queryResponse.data.error || "An error occurred while processing the query");
-        setResponseCategory("Error");
-        logError("General query error", queryResponse.data.error);
-        return; // Exit early if query response fails
-      }
-
-      // Handle category response
-      if (catResponse.ok) {
-        setResponseCategory(catResponse.data.category || "General");
-      } else {
-        setResponseCategory("General"); // Fallback category
-        logError("Category prediction error", catResponse.data.error || "Unknown error");
-      }
-
-      // Additional actions if query response was successful
-      if (autoReadEnabled) speak(queryResponse.data.response);
-      trackQuery("general", currentQuery, catResponse.ok ? catResponse.data.category : "General");
-    }
-  } catch (error) {
-    console.error("Request failed:", error);
-    setResponse("Network error. Please try again later.");
-    setResponseCategory("Error");
-    logError("Network error", error.message);
-  }
-};
-
-  const promptForAccountNumber = () => {
-    return new Promise((resolve) => {
-      const storedAccountNumber = localStorage.getItem("savedAccountNumber");
-
-      // For follow-up query, use the stored account number
-      if (storedAccountNumber && response && /^[A-Z]{2}\d{10}$/.test(storedAccountNumber)) {
-        resolve(storedAccountNumber);
-        return;
-      }
-
-      // Prompt for new account number
-      const accountInput = prompt("Please enter your 12-character account number (e.g., IN1234567890):");
-      if (accountInput === null) {
-        showAlert("Authentication canceled. Unable to process secure query.");
+      const input = prompt("Please enter your 12-character account number (e.g., IN1234567890):");
+      if (input === null) {
+        showAlert("Authentication canceled.");
         resolve(null);
         return;
       }
-
-      if (!/^[A-Z]{2}\d{10}$/.test(accountInput)) {
+      if (!/^[A-Z]{2}\d{10}$/.test(input)) {
         showAlert("Invalid account number format.");
         resolve(null);
         return;
       }
-
-      // Save for session use
-      localStorage.setItem("savedAccountNumber", accountInput);
-      resolve(accountInput);
+      localStorage.setItem("savedAccountNumber", input);
+      resolve(input);
     });
-  };
 
-  const handleTranslate = async () => {
-    if (!response) return;
+  // ── Main query handler ─────────────────────────────────────────────────────
 
-    setIsTranslating(true);
-    const authToken = sessionStorage.getItem("auth-token");
+  const handleQuerySubmit = async (e) => {
+    if (e) e.preventDefault();
+    if (!query.trim()) return;
+
+    const currentQuery = query.trim();
+    const authToken    = sessionStorage.getItem("auth-token");
     if (!authToken) {
-      setIsTranslating(false);
+      showAlert("You need to be logged in to use this feature.");
       return;
     }
 
-    try {
-      const translatedResponse = await fetch(`${API_BASE_URL}/api/query/translate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "auth-token": authToken,
-        },
-        body: JSON.stringify({ response }),
-      });
+    console.log(`[Dashboard] Submitting query='${currentQuery}' mode='${queryMode}'`);
 
-      const data = await translatedResponse.json();
-      if (translatedResponse.ok) {
-        setTranslatedResponse(data.translation || "No translation received");
-      } else {
-        setTranslatedResponse("Translation error: " + (data.error || "Unknown error"));
+    setLastQuery(currentQuery);
+    setQuery("");
+    setTranslatedResponse(null);
+
+    try {
+      // ── Account mode: secure DB lookup ──────────────────────────────────
+      if (queryMode === "account" && containsSensitiveInfo(currentQuery)) {
+        const accountNumber = await promptForAccountNumber();
+        if (!accountNumber) return;
+
+        const res  = await fetch(`${API_BASE_URL}/api/customers/secureQuery`, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json", "auth-token": authToken },
+          body:    JSON.stringify({ query: currentQuery, accountNumber }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setResponse(data.response || "No response received");
+          setResponseCategory(data.category || "Account");
+          if (autoReadEnabled) speak(data.response);
+        } else {
+          setResponse(data.error || "An error occurred");
+          setResponseCategory("Error");
+          logError("Secure query error", data.error);
+        }
+        fetchQueryHistory();
+        return;
       }
+
+      // ── Neural / Knowledge / non-sensitive Account mode ──────────────────
+      // Map frontend mode to backend mode string
+      const backendMode =
+        queryMode === "account"   ? "account"   :
+        queryMode === "knowledge" ? "knowledge" :
+        "neural";
+
+      const [queryRes, catRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/query/`, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json", "auth-token": authToken },
+          body:    JSON.stringify({ query: currentQuery, mode: backendMode }),
+        }).then((r) => r.json().then((d) => ({ ok: r.ok, data: d }))),
+
+        fetch(`${API_BASE_URL}/api/query/category`, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json", "auth-token": authToken },
+          body:    JSON.stringify({ query: currentQuery }),
+        }).then((r) => r.json().then((d) => ({ ok: r.ok, data: d }))),
+      ]);
+
+      if (queryRes.ok) {
+        setResponse(queryRes.data.response || "No response received");
+      } else {
+        setResponse(queryRes.data.error || "An error occurred");
+        setResponseCategory("Error");
+        logError("Query error", queryRes.data.error);
+        return;
+      }
+
+      setResponseCategory(
+        catRes.ok ? (catRes.data.category || "General") : "General"
+      );
+
+      if (autoReadEnabled) speak(queryRes.data.response);
+      fetchQueryHistory();
+
     } catch (error) {
-      console.error("Translation request failed:", error);
+      console.error("Request failed:", error);
+      setResponse("Network error. Please try again later.");
+      setResponseCategory("Error");
+      logError("Network error", error.message);
+    }
+  };
+
+  // ── Translation ────────────────────────────────────────────────────────────
+
+  const handleTranslate = async () => {
+    if (!response) return;
+    setIsTranslating(true);
+    const authToken = sessionStorage.getItem("auth-token");
+    if (!authToken) { setIsTranslating(false); return; }
+
+    try {
+      const res  = await fetch(`${API_BASE_URL}/api/query/translate`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", "auth-token": authToken },
+        body:    JSON.stringify({ response }),
+      });
+      const data = await res.json();
+      setTranslatedResponse(
+        res.ok
+          ? (data.translation || "No translation received")
+          : "Translation error: " + (data.error || "Unknown error")
+      );
+    } catch {
       setTranslatedResponse("Network error. Please try again.");
     } finally {
       setIsTranslating(false);
     }
   };
 
+  // ── Close response ─────────────────────────────────────────────────────────
+
   const handleCloseResponse = () => {
     setIsTransitioning(true);
-
-    localStorage.removeItem("savedAccountNumber"); // clear account number
+    localStorage.removeItem("savedAccountNumber");
     setTimeout(() => {
       setResponse(null);
       setTranslatedResponse(null);
@@ -264,37 +248,18 @@ const handleQuerySubmit = async (e) => {
     }, 300);
   };
 
-  const togglePopup = (popupName) => {
-    setActivePopup(activePopup === popupName ? null : popupName);
-  };
-
-  const fetchQueryHistory = () => {
-    const authToken = sessionStorage.getItem("auth-token");
-    if (!authToken) return;
-
-    fetch(`${API_BASE_URL}/api/query/history?limit=3&sort=-createdAt`, {
-      headers: { "auth-token": authToken }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setQueryHistory(data);
-        setRecentHighlights(data.slice(0, 3).map((entry, index) => ({
-          id: index + 1,
-          query: entry.query,
-          response: entry.response,
-          category: entry.category || "General"
-        })));
-      })
-      .catch(err => console.error("Error fetching history:", err));
-  };
+  const togglePopup = (name) =>
+    setActivePopup(activePopup === name ? null : name);
 
   useEffect(() => {
-    localStorage.setItem('fontSize', fontSize);
+    localStorage.setItem("fontSize", fontSize);
   }, [fontSize]);
 
   useEffect(() => {
     fetchQueryHistory();
   }, []);
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className={dashboardClasses}>
@@ -302,6 +267,7 @@ const handleQuerySubmit = async (e) => {
         <div className="conversation-container">
           <main className="main-content">
             {!response && <WelcomeMessage />}
+
             {response && (
               <ResponseDisplay
                 lastQuery={lastQuery}
@@ -314,31 +280,39 @@ const handleQuerySubmit = async (e) => {
                 speak={speak}
               />
             )}
-            {!response && <div className="query-label"><p style={{ fontSize: "20px", textAlign: "center" }}>What's your query?</p></div>}
+
+            {!response && (
+              <div className="query-label">
+                <p style={{ fontSize: "20px", textAlign: "center" }}>
+                  What's your query?
+                </p>
+              </div>
+            )}
+
             {!response && (
               <QueryInput
                 query={query}
                 setQuery={setQuery}
                 onSubmit={handleQuerySubmit}
-                transformerMode={transformerMode}
-                setTransformerMode={setTransformerMode}
+                queryMode={queryMode}
+                setQueryMode={setQueryMode}
               />
             )}
+
             {!response && <ButtonNavigation togglePopup={togglePopup} />}
             {!response && <Footer />}
-            {response && <div className="response-bottom-spacer"></div>}
+            {response  && <div className="response-bottom-spacer" />}
           </main>
         </div>
 
         {response && (
-          <div className={`response-mode-query ${isTransitioning ? 'entering' : ''}`}>
+          <div className={`response-mode-query ${isTransitioning ? "entering" : ""}`}>
             <QueryInput
               query={query}
               setQuery={setQuery}
               onSubmit={handleQuerySubmit}
-              // isProcessing={isProcessing}
-              transformerMode={transformerMode}
-              setTransformerMode={setTransformerMode}
+              queryMode={queryMode}
+              setQueryMode={setQueryMode}
               placeholder="Ask a follow-up question..."
             />
           </div>
@@ -358,8 +332,11 @@ const handleQuerySubmit = async (e) => {
           setNotificationsEnabled={setNotificationsEnabled}
           autoReadEnabled={autoReadEnabled}
           setAutoReadEnabled={setAutoReadEnabled}
-          transformerMode={transformerMode}
-          setTransformerMode={setTransformerMode}
+          queryMode={queryMode}
+          setQueryMode={setQueryMode}
+          // Legacy prop — PopupSystem may still reference transformerMode
+          transformerMode={queryMode === "neural"}
+          setTransformerMode={(v) => setQueryMode(v ? "neural" : "account")}
         />
       </div>
     </div>

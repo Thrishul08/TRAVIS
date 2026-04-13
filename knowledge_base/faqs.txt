@@ -1,0 +1,148 @@
+TRAVIS Banking Knowledge Base
+
+--- ACCOUNT OPENING ---
+
+Q: What documents are required to open a savings account?
+A: To open a savings account you need a valid government-issued photo ID such as Aadhaar, PAN card, Passport, or Voter ID. You also need address proof such as a utility bill or Aadhaar, one recent passport-size photograph, and a minimum opening deposit. NRI customers additionally need a valid visa and overseas address proof.
+
+Q: What is the minimum balance required for a savings account?
+A: Regular savings accounts require a minimum balance of Rs 1000. Premium savings accounts require Rs 5000. Zero-balance accounts are available for students, senior citizens, and Jan Dhan Yojana beneficiaries with no minimum balance requirement.
+
+Q: How long does it take to open a bank account?
+A: Account opening typically takes 24 to 48 hours after submission of all required documents. Video KYC accounts can be opened instantly online. Branch-based accounts are activated within one working day. You will receive your account number and debit card by post or email.
+
+Q: Can I open a joint account?
+A: Yes, you can open a joint account with up to 3 account holders. All holders must submit their individual KYC documents. The account can operate under modes such as Either or Survivor, Former or Survivor, or Jointly. All account holders must sign the account opening form.
+
+--- KYC ---
+
+Q: What is KYC and why is it required?
+A: KYC stands for Know Your Customer. It is a mandatory process required by the Reserve Bank of India to verify the identity and address of bank customers. KYC helps prevent fraud, money laundering, and terrorist financing. It must be completed at account opening and periodically updated.
+
+Q: How do I update my KYC?
+A: You can update KYC by visiting your home branch with original documents, using the bank video KYC option on the mobile app, or through net banking for minor updates. Required documents are a valid photo ID and address proof. KYC update is free of charge and takes 2 to 3 working days.
+
+Q: What happens if KYC is not completed?
+A: If KYC is not completed within the specified period your account may be frozen for debit transactions. You will only be able to receive credits. Once KYC is completed restrictions are lifted within 48 hours. You will receive SMS and email reminders before any restrictions are applied.
+
+Q: Which documents are accepted for KYC?
+A: Accepted identity documents include Aadhaar card, PAN card, Passport, Voter ID, and Driving License. Accepted address proof documents include Aadhaar, Passport, utility bills not older than 3 months, bank account statement, and registered rent agreement.
+
+--- LOANS ---
+
+Q: What types of loans does the bank offer?
+A: The bank offers Home Loans for purchase or construction of property, Personal Loans for personal expenses without collateral, Auto Loans for purchase of vehicles, Education Loans for higher education, Business Loans for small enterprises, and Gold Loans against gold ornaments or coins.
+
+Q: What documents are required to apply for a home loan?
+A: Documents required for a home loan include identity proof such as Aadhaar or PAN, address proof, salary slips for last 3 months and Form 16 and bank statements for last 6 months for salaried employees, ITR for last 2 years for self-employed individuals, property documents including sale agreement and title deed, and passport-size photographs.
+
+Q: What is the interest rate on personal loans?
+A: Personal loan interest rates range from 10.5 percent to 18 percent per annum depending on your credit score and income. Customers with a CIBIL score above 750 qualify for the best rates. The loan tenure ranges from 12 to 60 months. Processing fees are 1 percent to 2 percent of the loan amount.
+
+Q: How long does loan approval take?
+A: Personal loan approval takes 24 to 72 hours for pre-approved customers and 5 to 7 working days for new applicants. Home loan approval takes 7 to 15 working days after document submission. Education loan approval takes 15 working days. You will receive updates via SMS and email at each stage.
+
+Q: What is an EMI (equated monthly installment) and how is it calculated?
+A: EMI stands for Equated Monthly Installment. It is a fixed monthly payment that includes both principal repayment and interest. EMI is calculated based on the principal amount, the monthly interest rate, and the total number of installments. You can use the EMI calculator on the bank website or mobile app to get an exact figure.
+
+Q: Can I prepay or foreclose my loan?
+A: Yes, prepayment and foreclosure are allowed. For floating rate loans there are no prepayment charges as per RBI guidelines. For fixed rate loans a prepayment charge of 2 percent to 4 percent of the outstanding principal may apply. Partial prepayment is allowed after 6 EMI payments. Full foreclosure is allowed at any time.
+
+Q: What is the loan eligibility criteria?
+A: For personal loans the minimum age is 21 years, maximum age is 60 at loan maturity, minimum monthly income is Rs 15000 for salaried employees, minimum employment of 1 year with current employer, and a CIBIL score of 650 or above. For home loans the minimum age is 18 years and maximum age is 70 years at maturity.
+
+--- CREDIT CARDS ---
+
+Q: How do I apply for a credit card?
+A: You can apply for a credit card online through the bank website or mobile app, at any branch, or through pre-approved offers. Eligibility requires minimum age of 18 years, minimum annual income of Rs 2.5 lakhs, and a CIBIL score of 650 and above. Existing bank customers enjoy faster processing.
+
+Q: What is the credit card billing cycle?
+A: The billing cycle is typically 30 days. Your statement is generated on the statement date each month showing all transactions and the total amount due. The payment due date is 15 to 20 days after the statement date. Paying the full amount by the due date means no interest charges.
+
+Q: What should I do if my credit card is lost or stolen?
+A: Immediately call the 24x7 customer care helpline to block the card. You can also block it instantly via the mobile banking app or net banking. Report the loss to the nearest police station. Once blocked no transactions can be made. A replacement card will be issued within 5 to 7 working days.
+
+Q: How do I activate my new credit card?
+A: Activate your new credit card by calling the customer care number on the back of the card, using the bank mobile app, net banking portal, or ATM. You will need to set a 4-digit PIN. The card is ready to use immediately after activation. First-time transactions may require OTP verification sent to your registered mobile.
+
+Q: What is the credit card dispatch status?
+A: After your credit card application is approved the card is dispatched within 3 to 5 working days by registered post or courier. You will receive an SMS and email with tracking details. The estimated delivery time is 7 to 10 working days from dispatch. If not received within 15 days contact customer care to request a replacement.
+
+--- FUND TRANSFERS ---
+
+Q: What is IMPS?
+A: IMPS stands for Immediate Payment Service. It allows instant money transfers 24 hours a day 7 days a week including weekends and public holidays. IMPS is ideal for urgent transfers at any time of day or night.
+
+Q: What are the IMPS transfer limits and charges?
+A: IMPS allows a maximum transfer of Rs 5 lakhs per transaction. It is available 24x7 including weekends and public holidays. Nominal charges apply per transaction. IMPS transfers are processed instantly in real time.
+
+Q: What is NEFT?
+A: NEFT stands for National Electronic Funds Transfer. It is a nationwide payment system that facilitates one-to-one fund transfers. NEFT is available 24 hours a day 7 days a week. Transfers are processed in batches every 30 minutes.
+
+Q: What are the NEFT transfer limits and charges?
+A: NEFT has no minimum or maximum transfer limit. It is available 24x7 including weekends and holidays. Transfers are processed in batches every 30 minutes. NEFT is free for amounts below Rs 10000 and nominal charges apply for amounts above Rs 10000.
+
+Q: What is RTGS?
+A: RTGS stands for Real Time Gross Settlement. It is used for high-value fund transfers that are settled in real time on a gross basis. RTGS is the preferred method for large urgent transactions between banks.
+
+Q: What are the RTGS transfer limits and charges?
+A: RTGS requires a minimum transfer of Rs 2 lakhs with no maximum limit. It is available from 7 AM to 6 PM on working days only. Nominal charges apply. Transfers are processed in real time making RTGS suitable for high-value urgent transactions.
+
+Q: What is UPI?
+A: UPI stands for Unified Payments Interface. It allows instant money transfers using a virtual payment address, QR code, or mobile number without entering bank account details. UPI transfers are instant, available 24x7, and most transactions are free of charge.
+
+Q: How do I set up UPI?
+A: To set up UPI download the bank mobile app, link your bank account, create a UPI ID which is usually your mobile number at bankname, and set a 4 to 6 digit UPI PIN using your debit card details. Transfers are instant and available 24x7.
+
+--- ACCOUNT SERVICES ---
+
+Q: How do I update my mobile number with the bank?
+A: You can update your mobile number by visiting the home branch with your Aadhaar card and a self-attested copy. Mobile number update requires a branch visit for security reasons. Updates take 24 to 48 hours. You will receive a confirmation on both your old and new number.
+
+Q: How do I update my email address with the bank?
+A: You can update your email address through the mobile banking app or net banking portal. The update takes 24 to 48 hours. You will receive a confirmation on both your old and new email addresses.
+
+Q: How do I request a cheque book?
+A: Request a cheque book through the mobile banking app, net banking, ATM, or by visiting the branch. Standard cheque books with 10 leaves are free. Additional cheque books may have a nominal charge. Delivery takes 5 to 7 working days to your registered address.
+
+Q: How do I report an unauthorized transaction?
+A: Report unauthorized transactions immediately by calling customer care or using the dispute resolution option in the mobile app or net banking. Report within 3 days for zero liability. The bank investigates within 10 working days and provisional credit may be given during the investigation.
+
+Q: What is the process to close a bank account?
+A: To close a bank account visit the home branch with your passbook, debit card, unused cheque leaves, and a signed account closure form. Ensure the balance is zero or withdraw the remaining balance. The closure process takes 7 working days. Pre-closure charges may apply if closing within 12 months of opening.
+
+--- DIGITAL BANKING ---
+
+Q: How do I register for internet banking?
+A: Register for internet banking online through the bank website using your debit card details. You will need your account number, registered mobile number, and debit card. An OTP will be sent to your registered mobile for verification. You can also register by visiting the branch and filling the registration form.
+
+Q: What should I do if I forget my internet banking password?
+A: Reset your internet banking password using the Forgot Password option on the login page. You will need your customer ID or account number, registered mobile number for OTP, and debit card details. You can also visit the branch or call customer care. The new password must be at least 8 characters with letters, numbers, and a special character.
+
+Q: Is mobile banking safe to use?
+A: Yes, mobile banking is secured with multiple layers of protection including 256-bit SSL encryption, two-factor authentication using OTP, biometric login, session timeout, and device binding. Never share your OTP, MPIN, or password with anyone. Always download the official app from the App Store or Google Play Store.
+
+--- FIXED DEPOSITS ---
+
+Q: What is a fixed deposit (FD)?
+A: A fixed deposit or FD is a financial instrument where you deposit a lump sum for a fixed period at a predetermined interest rate higher than a savings account. Fixed deposits offer guaranteed returns, capital protection, and flexible tenures from 7 days to 10 years.
+
+Q: What are the benefits of a fixed deposit (FD)?
+A: Benefits of fixed deposits include guaranteed returns, capital protection, flexible tenures, higher interest rates for senior citizens, loan facility against FD up to 90 percent of the deposit amount, and the option for premature withdrawal with a small penalty.
+
+Q: What are the fixed deposit (FD) interest rates?
+A: Fixed deposit interest rates vary by tenure. For 7 to 45 days the rate is 3.5 to 4.5 percent. For 46 to 180 days it is 4.5 to 5.5 percent. For 181 to 365 days it is 5.5 to 6.5 percent. For 1 to 3 years it is 6.5 to 7 percent. Senior citizens receive an additional 0.5 percent on all tenures.
+
+--- CUSTOMER SERVICE ---
+
+Q: What are the bank branch timings?
+A: Bank branches are open Monday to Friday from 10 AM to 4 PM and Saturday from 10 AM to 2 PM. Branches are closed on Sundays and public holidays.
+
+Q: What are the customer care timings?
+A: Customer care helpline is available 24x7 for emergency services like card blocking. For general queries customer care is available from 8 AM to 10 PM all days including weekends.
+
+Q: How do I raise a complaint with the bank?
+A: You can raise a complaint through the mobile banking app, net banking portal, by calling customer care, by emailing the bank grievance email, or by writing to the branch manager. You will receive a ticket number for tracking. Complaints are resolved within 5 to 7 working days.
+
+Q: What should I do if I am not satisfied with complaint resolution?
+A: If you are not satisfied with the bank response you can escalate to the Banking Ombudsman of the Reserve Bank of India. The Ombudsman handles disputes between customers and banks and the service is free of charge.

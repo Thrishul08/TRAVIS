@@ -5,7 +5,7 @@ class ResponseFormatter {
 
     static formatCreditCard(customer) {
         const status = customer.creditCardStatus;
-        let response = `Your credit card status is: ${status}`;
+        let response = `Your credit card status: ${status}`;
 
         if (status === 'Delivered' && customer.creditCardLimit) {
             response += `\nCredit limit: ₹${customer.creditCardLimit.toLocaleString('en-IN')}`;

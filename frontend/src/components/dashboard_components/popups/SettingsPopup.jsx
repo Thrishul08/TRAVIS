@@ -1,28 +1,46 @@
 import React from "react";
+import "./SettingsPopup.css";
 
 const SettingsPopup = ({
   darkMode,
   setDarkMode,
-  transformerMode,
-  setTransformerMode,
   autoReadEnabled,
   setAutoReadEnabled,
-  onClose
+  onClose,
+  // New props
+  queryMode,
+  setQueryMode,
+  // Legacy props
+  transformerMode,
+  setTransformerMode,
 }) => {
-  const handleToggle = (key, currentValue, setter) => {
+  const effectiveMode    = queryMode ?? (transformerMode ? "neural" : "account");
+  const effectiveSetMode = setQueryMode ?? ((m) => setTransformerMode && setTransformerMode(m === "neural"));
+
+  const handleToggle = (key, val, setter) => {
     if (typeof setter === "function") {
-      const newValue = !currentValue;
-      setter(newValue);
-      localStorage.setItem(key, JSON.stringify(newValue));
-    } else {
-      console.error(`Invalid setter for ${key}`);
+      setter(!val);
+      localStorage.setItem(key, JSON.stringify(!val));
     }
+  };
+
+  const handleModeChange = (e) => {
+    const mode = e.target.value;
+    effectiveSetMode(mode);
+    localStorage.setItem("queryMode", mode);
+  };
+
+  const modeDescriptions = {
+    account:   "Real customer data from database",
+    neural:    "Custom banking AI transformer",
+    knowledge: "Banking knowledge base (RAG)",
   };
 
   return (
     <div className="popup-content">
       <h2>Settings</h2>
       <div className="settings-list">
+
         <div className="setting-item">
           <label>
             <span>Dark Mode</span>
@@ -34,32 +52,35 @@ const SettingsPopup = ({
             </button>
           </label>
         </div>
-        <div className="setting-item">
-          <label>
-            <span>Transformer Mode</span>
-            <button
-              className={`toggle-switch ${transformerMode ? "active" : ""}`}
-              onClick={() =>
-                handleToggle("transformerMode", transformerMode, setTransformerMode)
-              }
+
+        <div className="setting-item setting-item--column">
+          <div className="setting-row">
+            <span>Query Mode</span>
+            <select
+              className="mode-select"
+              value={effectiveMode}
+              onChange={handleModeChange}
             >
-              {transformerMode ? "ON" : "OFF"}
-            </button>
-          </label>
+              <option value="account">Account</option>
+              <option value="neural">Neural</option>
+              <option value="knowledge">Knowledge</option>
+            </select>
+          </div>
+          <span className="mode-desc">{modeDescriptions[effectiveMode]}</span>
         </div>
+
         <div className="setting-item">
           <label>
             <span>Auto-read Responses</span>
             <button
               className={`toggle-switch ${autoReadEnabled ? "active" : ""}`}
-              onClick={() =>
-                handleToggle("autoReadEnabled", autoReadEnabled, setAutoReadEnabled)
-              }
+              onClick={() => handleToggle("autoReadEnabled", autoReadEnabled, setAutoReadEnabled)}
             >
               {autoReadEnabled ? "ON" : "OFF"}
             </button>
           </label>
         </div>
+
       </div>
       <div className="popup-actions">
         <button onClick={onClose} className="secondary-btn">Close</button>

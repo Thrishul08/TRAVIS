@@ -1,14 +1,57 @@
-torch
-torchvision
-torchaudio
-torchtext
-fastapi
-uvicorn
-pydantic
-pickle
-numpy
-regex
-nltk
-gtts
-spacy
-scikit-learn
+# TRAVIS AI Services - Python 3.10 Windows
+# -----------------------------------------------------------------------
+# INSTALL ORDER (run these 3 commands in order):
+#
+# 1. pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cpu
+# 2. pip install -r ai_services/requirements.txt
+# 3. python -m spacy download en_core_web_sm
+# -----------------------------------------------------------------------
+
+# PyTorch - already installed in step 1, listed here for reference
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# FastAPI
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+
+# pydantic - use v1 branch (spacy requires it)
+pydantic==1.10.14
+
+# NumPy - must be <2.0 for torch 2.1.2
+numpy==1.26.4
+
+# -----------------------------------------------------------------------
+# CRITICAL: transformers must be <=4.35.2
+# transformers 4.36+ uses torch.utils._pytree.register_pytree_node
+# which does NOT exist in torch 2.1.2 (it was added in torch 2.3).
+# This is the root cause of the AttributeError crash.
+# -----------------------------------------------------------------------
+transformers==4.35.2
+tokenizers==0.15.2
+huggingface_hub==0.19.4
+accelerate==0.24.1
+
+# RAG - sentence-transformers must use the pinned transformers above
+sentence-transformers==2.7.0
+
+# chromadb 0.4.24 - stable schema (0.5+ changed SQLite schema -> "no such column: topic")
+chromadb==0.4.24
+
+# Translation model (custom seq2seq)
+torchtext==0.16.2
+spacy==3.7.4
+
+# Translation fallback when torchtext DLL fails on Windows
+deep-translator==1.11.4
+
+# TTS
+gTTS==2.5.1
+
+# Classifier
+scikit-learn==1.4.0
+
+# Misc
+regex==2023.12.25
+nltk==3.8.1
