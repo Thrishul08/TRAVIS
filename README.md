@@ -6,8 +6,9 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![React](https://img.shields.io/badge/React-18.0+-61DAFB.svg)](https://reactjs.org)
 [![Node.js](https://img.shields.io/badge/Node.js-16.0+-green.svg)](https://nodejs.org)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
 
-TRAVIS is a **voice-driven, AI-powered banking assistant** designed to empower visually impaired bank agents. It processes spoken queries, classifies them into relevant banking categories using a transformer model, and retrieves customer data when needed—providing an **accessible interface with voice and visual support**.
+TRAVIS is a **voice-driven, AI-powered banking assistant** designed to empower visually impaired bank agents. It processes spoken queries, classifies them into relevant banking categories using transformer models, retrieves customer data when needed, and augments responses with knowledge base information—providing an **accessible interface with voice and visual support**.
 
 </div>
 
@@ -23,23 +24,54 @@ TRAVIS is a **voice-driven, AI-powered banking assistant** designed to empower v
 ### 🧠 **AI-Powered Query Handling**
 - **Query Classification**: Uses a transformer-based model for accurate banking category identification.
 - **Multi-Mode Response System**:
-  - **Transformer Mode**: Generates dynamic responses based on a custom PyTorch model.
+  - **AI Mode (Transformer)**: Generates dynamic responses based on a custom PyTorch seq2seq model.
   - **Database Mode**: Fetches account-related details for queries requiring authentication.
+  - **Knowledge Base Mode (RAG)**: Retrieves answers from a curated FAQ knowledge base using semantic search.
+
+### 📚 **RAG (Retrieval-Augmented Generation) Knowledge Base**
+The Knowledge Base module provides intelligent document retrieval and FAQ management:
+
+#### **Core RAG Features:**
+- **Semantic Search**: Uses **Sentence Transformers** (all-MiniLM-L6-v2) to convert text to embeddings
+- **Vector Database**: **Chroma** stores and efficiently retrieves FAQ embeddings
+- **Intelligent Retrieval**: Finds the most relevant FAQ answers based on semantic similarity
+- **Fallback Support**: Seamlessly switches to AI mode when knowledge base lacks an answer
+- **Extensible FAQs**: Easy to add new banking FAQs to the knowledge base
+
+#### **Knowledge Base Coverage:**
+- 💳 Credit cards & debit cards
+- 🏦 Account management & activation
+- 💰 Loan & credit services
+- 💸 Payment methods & transfers (UPI, NEFT, RTGS)
+- 🔄 Card replacement & blocking
+- 📋 KYC & document requirements
+- 🔐 Security & fraud protection
+
+#### **How RAG Works:**
+1. User asks: *"What should I do if I lost my credit card?"*
+2. System converts question to embedding using Sentence Transformers
+3. Chroma retrieves top matching FAQs from vector database
+4. Returns relevant answer with high confidence
+5. If no match found, AI mode generates dynamic response
 
 ### 🔁 **Banking Services Covered**
 - 💰 **Balance Inquiry**
 - 📄 **Account Statement**
 - 📌 **KYC Status**
 - 🏦 **Loan Approval & Status**
+- 📚 **FAQ Knowledge Base Search**
+- 🌐 **Multi-language Support** (English & Telugu)
 
 ### 👤 **Agent & Admin Dashboard**
-- **Agent Profile**: Accessible dashboard for visually impaired bank agents.
-- **Admin Panel**: Allows management of customer accounts (*CRUD operations*).
+- **Agent Profile**: Accessible dashboard for visually impaired bank agents
+- **Admin Panel**: Complete customer management with CRUD operations
+- **Query History**: Track previous queries and responses
 
 ### ♿ **Accessibility Enhancements**
-- **Adjustable Font Sizes**
-- **High-Contrast Dark Mode**
-- **Voice Response Toggle for Optimal Usability**
+- **Adjustable Font Sizes**: Scale UI text to user preference
+- **High-Contrast Dark Mode**: Optimized for visually impaired users
+- **Voice Response Toggle**: Enable/disable automatic audio feedback
+- **Query Mode Selection**: Easy switching between AI, Database, and Knowledge Base modes
 
 ---
 
@@ -47,12 +79,15 @@ TRAVIS is a **voice-driven, AI-powered banking assistant** designed to empower v
 
 <div align="center">
 
-| **Layer** | **Technology** |
-|-----------|----------------|
-| **Frontend** | ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) Web Speech API, TTS |
-| **Backend** | ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat) MongoDB |
-| **AI Model** | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi) ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white) |
-| **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat&logo=mongodb&logoColor=white) |
+| **Layer** | **Technology** | **Purpose** |
+|-----------|----------------|-----------|
+| **Frontend** | React 18+, JavaScript, Web Speech API | User interface & voice I/O |
+| **Backend API** | Node.js, Express.js | API routing & business logic |
+| **Database** | MongoDB | Customer & query history storage |
+| **AI & NLP** | Python 3.11, FastAPI, PyTorch 2.1.2 | Model inference & processing |
+| **RAG System** | Sentence Transformers, Chroma DB | Knowledge base & semantic search |
+| **Text-to-Speech** | gTTS (Google TTS) | Voice response generation |
+| **Containerization** | Docker, Docker Compose | Service orchestration |
 
 </div>
 
@@ -60,63 +95,209 @@ TRAVIS is a **voice-driven, AI-powered banking assistant** designed to empower v
 
 ## 📦 Installation & Setup
 
-### 🚀 Quick Start
+### � **Option 1: Docker (Recommended for Production)**
 
-#### 1️⃣ Clone the Repository
+#### Prerequisites
+- **Docker** and **Docker Compose** installed
+- **MongoDB** running on `localhost:27017`
+- **4GB+ RAM** available for AI models
+
+#### Step 1: Clone Repository
 ```bash
 git clone https://github.com/AmshudharReddy/TRAVIS.git
 cd TRAVIS
 ```
 
-#### 2️⃣ Frontend Setup
+#### Step 2: Build All Docker Images
+```bash
+# Build all services
+docker compose build
+
+# Or build individually:
+docker build -t travis-ai ./ai_services          # AI Services (Python)
+docker build -t travis-be ./backend              # Backend (Node.js)
+docker build -t travis-fe ./frontend             # Frontend (React)
+```
+
+#### Step 3: Run Services with Docker Compose
+```bash
+# Start all services in background
+docker compose up -d
+
+# View running containers
+docker compose ps
+
+# Check logs (all services)
+docker compose logs -f
+
+# Check logs for specific service
+docker compose logs -f travis-ai-services
+docker compose logs -f travis-backend
+docker compose logs -f travis-frontend
+```
+
+**Access the application:**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:5000
+- **AI Services**: http://localhost:5001
+
+#### Step 4: Stop Services
+```bash
+# Stop all services
+docker compose down
+
+# Stop and remove volumes (clears cache)
+docker compose down -v
+```
+
+---
+
+### 🎯 **Run Individual Docker Containers (Without Compose)**
+
+If you prefer to run each service separately:
+
+#### AI Services (Port 5001)
+```bash
+docker run -d \
+  --name travis-ai-services \
+  -p 5001:5001 \
+  -v "$(pwd)/knowledge_base:/knowledge_base:ro" \
+  -v hf_cache:/app/.cache/huggingface \
+  -v st_cache:/app/.cache/sentence_transformers \
+  -e PYTHONUNBUFFERED=1 \
+  -e HF_HOME=/app/.cache/huggingface \
+  -e TRANSFORMERS_CACHE=/app/.cache/huggingface \
+  -e SENTENCE_TRANSFORMERS_HOME=/app/.cache/sentence_transformers \
+  -m 3g \
+  travis-ai
+```
+
+#### Backend (Port 5000)
+```bash
+docker run -d \
+  --name travis-backend \
+  -p 5000:5000 \
+  -e NODE_ENV=production \
+  -e AI_BASE_URL=http://host.docker.internal:5001 \
+  -e MONGO_URI=mongodb://host.docker.internal:27017/TRAVIS \
+  --add-host host.docker.internal:host-gateway \
+  travis-be
+```
+
+#### Frontend (Port 3000)
+```bash
+docker run -d \
+  --name travis-frontend \
+  -p 3000:3000 \
+  travis-fe
+```
+
+#### Stop All Individual Containers
+```bash
+docker stop travis-ai-services travis-backend travis-frontend
+docker rm travis-ai-services travis-backend travis-frontend
+```
+
+---
+
+### 💻 **Option 2: Manual Setup for Development**
+
+#### Prerequisites
+- **Node.js** 16+ (for Frontend & Backend)
+- **Python** 3.10+ (for AI Services)
+- **MongoDB** running locally
+
+#### Step 1: Clone Repository
+```bash
+git clone https://github.com/AmshudharReddy/TRAVIS.git
+cd TRAVIS
+```
+
+#### Step 2: Setup Frontend
 ```bash
 cd frontend
 npm install
 npm audit fix  # Fix any vulnerabilities
 ```
 
-#### 3️⃣ Backend Setup
+#### Step 3: Setup Backend
 ```bash
 cd ../backend
 npm install
 ```
 
-#### 4️⃣ AI Services Setup
+#### Step 4: Setup AI Services
 ```bash
-cd ../services
+cd ../ai_services
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies (with specific PyTorch version)
+pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
-```
 
-### 🐍 Python Dependencies
-Create a `requirements.txt` file with the following dependencies:
-
-```txt
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-torch==2.1.0
-scikit-learn==1.3.2
-nltk==3.8.1
-pickle5==0.0.12
-transformers==4.35.0
-numpy==1.24.3
-pandas==2.0.3
-```
-
-#### 🔧 NLTK Setup
-If you encounter issues with NLTK tokenizers:
-
-```python
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
+# Download spaCy model
+python -m spacy download en_core_web_sm
 ```
 
 ---
 
+### 🐍 **Python Dependencies (AI Services)**
+
+```txt
+# Core AI Framework
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+
+# Deep Learning
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# NLP & Transformers
+transformers==4.35.2
+tokenizers==0.15.2
+huggingface_hub==0.19.4
+
+# RAG Components
+sentence-transformers==2.7.0    # Semantic embeddings
+chromadb==0.4.24                # Vector database
+
+# Additional Libraries
+scikit-learn==1.6.1             # ML utilities
+spacy==3.7.4                    # NLP processing
+nltk==3.8.1                     # Text processing
+gTTS==2.5.1                     # Text-to-Speech
+regex==2023.12.25
+```
+
+
+
 ## ▶️ Running the Application
 
-### 🖥️ Development Mode
-Open **three separate terminals** and run:
+### � With Docker Compose (Recommended)
+```bash
+# Build images (first time)
+docker compose build
+
+# Start all services
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+```
+
+### 🖥️ Development Mode (Manual - Three Separate Terminals)
 
 <div align="center">
 
@@ -132,38 +313,50 @@ Open **three separate terminals** and run:
 
 ## 🔌 API Endpoints
 
-### 📥 **Request Example:**
+### 📥 **Query Request Format:**
 ```json
 {
-  "query": "What if I lost my cheque book?"
+  "query": "What should I do if I lost my credit card?",
+  "mode": "knowledge"
 }
 ```
 
 ### 📤 **Response Examples:**
 
-#### 1️⃣ **Encoder-only Transformer model:**
-*Classifies input queries into relevant banking categories.*
+#### 1️⃣ **Category Classification:**
+*Encoder-only Transformer model classifies query into banking categories.*
 ```json
 {
-  "category": "top_up_by_cash_or_cheque"
+  "category": "card_replacement_blocking",
+  "confidence": 0.95
 }
 ```
 
-#### 2️⃣ **Encoder-Decoder Transformer (Seq2Seq):**
-*Generates a response for the given input query.*
+#### 2️⃣ **Knowledge Base Response (RAG):**
+*Retrieved from FAQ database using semantic similarity.*
 ```json
 {
-  "response": "if you lost your cheque deposit please provide the deposit date amount and method used i will review your account and investigate the issue"
+  "mode": "knowledge",
+  "response": "If you lost your credit card, immediately call our customer service to block it. You can request a replacement card which will be delivered in 7-10 business days.",
+  "source": "FAQ_CARD_REPLACEMENT"
 }
 ```
 
-### 🌐 **Translation Example:**
-
-#### 3️⃣ **Encoder-Decoder Transformer (Seq2Seq):**
-*Translates the generated response into the local language (Telugu).*
+#### 3️⃣ **AI Generated Response:**
+*Encoder-Decoder Transformer generates dynamic response.*
 ```json
 {
-  "translation": "మీరు మీ చెక్కును జమ చేయకపోతే దయచేసి డిపాజిట్ తేదీ మొత్తం మరియు ఉపయోగించిన పద్ధతిని అందించండి నేను మీ ఖాతాను సమీక్షిస్తాను మరియు సమస్యను పరిశీలిస్తాను"
+  "mode": "ai",
+  "response": "If you have lost your credit card, please immediately contact our customer service team to block the card and prevent unauthorized usage. A new card will be issued to you within 7-10 business days."
+}
+```
+
+#### 4️⃣ **Translation Response:**
+*Translates response to Telugu.*
+```json
+{
+  "original": "If you lost your credit card...",
+  "translation": "మీరు మీ క్రెడిట్ కార్డ్ కోల్పోతే..."
 }
 ```
 
@@ -173,35 +366,58 @@ Open **three separate terminals** and run:
 
 ```mermaid
 graph TB
-    A[User Voice Input] --> B[Web Speech API]
-    B --> C[React Frontend]
-    C --> D[Node.js Backend]
+    subgraph Frontend
+        A[User Voice Input]
+        B[Web Speech API]
+        C[React Dashboard]
+    end
     
-    D --> |AI Mode| E[FastAPI AI Service]
-    D --> |Database Mode| J[MongoDB Database]
+    subgraph Backend
+        D[Express.js API]
+        E[Query Router]
+        J[MongoDB Database]
+    end
     
-    E --> F[PyTorch Models]
-    F --> G[AI Response Generation]
+    subgraph AI_Services["AI Services (FastAPI)"]
+        F[Query Classifier]
+        G[RAG Module]
+        H[Transformer Model]
+        I[TTS Generator]
+    end
     
-    J --> K[Customer Data Retrieval]
-    K --> L[Database Response]
+    subgraph Knowledge_Base["Knowledge Base"]
+        K[Chroma Vector DB]
+        L[FAQ Embeddings]
+        M[Knowledge Files]
+    end
     
-    G --> M[Text-to-Speech]
-    L --> M[Text-to-Speech]
-    M --> N[Voice Output]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E -->|Category| F
+    E -->|Knowledge Query| G
+    E -->|Generate Response| H
     
-    style A fill:#4fc3f7,stroke:#0277bd,stroke-width:3px,color:#000
-    style B fill:#81c784,stroke:#388e3c,stroke-width:3px,color:#000
-    style C fill:#64b5f6,stroke:#1976d2,stroke-width:3px,color:#000
-    style D fill:#ffb74d,stroke:#f57c00,stroke-width:3px,color:#000
-    style E fill:#ba68c8,stroke:#7b1fa2,stroke-width:3px,color:#000
-    style F fill:#f06292,stroke:#c2185b,stroke-width:3px,color:#000
-    style G fill:#ff8a65,stroke:#d84315,stroke-width:3px,color:#000
-    style J fill:#4db6ac,stroke:#00695c,stroke-width:3px,color:#000
-    style K fill:#26a69a,stroke:#004d40,stroke-width:3px,color:#000
-    style L fill:#66bb6a,stroke:#2e7d32,stroke-width:3px,color:#000
-    style M fill:#ffd54f,stroke:#f9a825,stroke-width:3px,color:#000
-    style N fill:#a5d6a7,stroke:#388e3c,stroke-width:3px,color:#000
+    F --> H
+    G --> K
+    K --> L
+    M --> L
+    
+    H --> I
+    I --> C
+    
+    J --> D
+    
+    style A fill:#4fc3f7
+    style C fill:#64b5f6
+    style D fill:#ffb74d
+    style F fill:#ba68c8
+    style G fill:#ef9a9a
+    style H fill:#f06292
+    style I fill:#ffd54f
+    style K fill:#4db6ac
+    style M fill:#26a69a
 ```
 ---
 
@@ -242,22 +458,66 @@ graph TB
 
 ## 🚨 Troubleshooting
 
-### Common Issues
+### Common Issues & Solutions
 
-**Voice recognition not working?**
-- Ensure microphone permissions are granted
-- Check browser compatibility (Chrome/Edge recommended)
-- Verify microphone hardware functionality
+#### ❌ **Voice Recognition Not Working**
+```
+Issue: Microphone not detected or Web Speech API unavailable
+Solution:
+  1. Check browser compatibility (Chrome/Edge recommended)
+  2. Grant microphone permissions to the browser
+  3. Test microphone with system sound settings
+  4. Try in incognito mode
+```
 
-**AI service connection failed?**
-- Confirm Python dependencies are installed
-- Check if port 5001 is available
-- Verify model files are present
+#### ❌ **AI Service Connection Failed**
+```
+Issue: Backend cannot connect to AI service on port 5001
+Solution:
+  1. Verify AI service is running: docker compose logs travis-ai-services
+  2. Check if port 5001 is available: netstat -an | grep 5001
+  3. Confirm Hugging Face models are cached (first run takes 10-15 mins)
+  4. Check available RAM and disk space
+```
 
-**Database connection issues?**
-- Ensure MongoDB is running
-- Check connection string in `.env`
-- Verify database permissions
+#### ❌ **Knowledge Base Queries Failing**
+```
+Issue: RAG module not returning results
+Solution:
+  1. Verify knowledge_base folder exists: ls knowledge_base/
+  2. Check Chroma database: docker exec travis-ai-services ls /knowledge_base/chroma_store/
+  3. Check Sentence Transformers cache is populated
+  4. Review logs for embedding errors: docker compose logs travis-ai-services | grep -i rag
+```
+
+#### ❌ **Database Connection Issues**
+```
+Issue: MongoDB connection timeout
+Solution:
+  1. Verify MongoDB is running on localhost:27017
+  2. Check connection string in docker-compose.yml
+  3. Test connection: mongo mongodb://localhost:27017/TRAVIS
+  4. For Docker: Use correct host gateway flag
+```
+
+#### ❌ **Docker Permission Denied Errors**
+```
+Issue: Permission denied when accessing cache volumes
+Solution:
+  1. Run containers with proper user permissions
+  2. Clear and rebuild volumes: docker compose down -v && docker compose up -d --build
+  3. Check file ownership in docker volumes
+```
+
+#### ⚠️ **Slow First Requests (AI Service)**
+```
+This is normal! First request downloads models:
+  - Sentence Transformers: ~90MB
+  - Transformers library: ~300MB+
+  - Total: 15-30 minutes on first run
+  
+Solution: Pre-warm cache with: docker exec travis-ai-services python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+```
 
 ---
 

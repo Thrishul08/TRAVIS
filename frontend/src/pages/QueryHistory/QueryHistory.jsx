@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaHistory, FaSpinner, FaExclamationCircle, FaTag } from "react-icons/fa";
+import API_URL from "../../utils/apiConfig";
 import "./QueryHistory.css";
 
 const QueryHistory = ({ darkMode = false }) => {
@@ -16,7 +17,7 @@ const QueryHistory = ({ darkMode = false }) => {
             return;
         }
 
-        fetch("http://localhost:5000/api/query/history", {
+        fetch(`${API_URL}/api/query/history`, {
             headers: { "auth-token": authToken }
         })
             .then((res) => res.json())

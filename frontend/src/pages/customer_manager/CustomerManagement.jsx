@@ -5,6 +5,7 @@ import CustomerForm from "../../components/customer_components/CustomerForm"
 import CustomerTable from "../../components/customer_components/CustomerTable"
 import CustomerFilter from "../../components/customer_components/CustomerFilter"
 import { FaUsers, FaPlus, FaExclamationCircle } from "react-icons/fa"
+import API_URL from "../../utils/apiConfig"
 import "./CustomerManagement.css";
 
 const CustomerManagement = ({ darkMode = false }) => {
@@ -23,7 +24,7 @@ const CustomerManagement = ({ darkMode = false }) => {
     try {
       // Convert filter object to query string
       const queryString = new URLSearchParams(filterParams).toString()
-      const response = await fetch(`http://localhost:5000/api/customers${queryString ? `?${queryString}` : ""}`, {
+      const response = await fetch(`${API_URL}/api/customers${queryString ? `?${queryString}` : ""}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ const CustomerManagement = ({ darkMode = false }) => {
   // Handle form submission (add/update)
   const handleFormSubmit = async (customerData) => {
     try {
-      const response = await fetch("http://localhost:5000/api/customers/add-or-update", {
+      const response = await fetch(`${API_URL}/api/customers/add-or-update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +79,7 @@ const CustomerManagement = ({ darkMode = false }) => {
   // Handle customer deletion
   const handleDeleteCustomer = async (accountNumber) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/customers/${accountNumber}`, {
+      const response = await fetch(`${API_URL}/api/customers/${accountNumber}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

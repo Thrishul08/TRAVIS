@@ -1,6 +1,6 @@
 const axios = require("axios");
-
-const RAG_API_URL = "http://127.0.0.1:5001/api/rag";
+const AI_BASE_URL = process.env.AI_BASE_URL || "http://127.0.0.1:5001";
+const RAG_API_URL = `${AI_BASE_URL}/api/rag`;
 
 /**
  * Call the Python RAG pipeline.

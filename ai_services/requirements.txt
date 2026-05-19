@@ -50,7 +50,7 @@ deep-translator==1.11.4
 gTTS==2.5.1
 
 # Classifier
-scikit-learn==1.4.0
+scikit-learn==1.6.1
 
 # Misc
 regex==2023.12.25

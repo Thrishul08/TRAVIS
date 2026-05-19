@@ -7,8 +7,9 @@ import ButtonNavigation from "../../components/dashboard_components/ButtonNaviga
 import PopupSystem from "../../components/dashboard_components/PopupSystem";
 import Footer from "../../components/dashboard_components/Footer";
 import { containsSensitiveInfo } from "../../utils/securityUtils";
+import API_URL from "../../utils/apiConfig";
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = API_URL;
 
 /**
  * queryMode: "account" | "neural" | "knowledge"

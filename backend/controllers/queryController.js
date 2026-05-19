@@ -149,10 +149,12 @@ const getQueryHistory = async (req, res) => {
 
 // ─── Controller: Telugu TTS ───────────────────────────────────────────────────
 
+const AI_BASE_URL = process.env.AI_BASE_URL || "http://127.0.0.1:5001";
+
 const handleTelugu = async (req, res) => {
     try {
         const pyRes = await axios.post(
-            "http://127.0.0.1:5001/api/tts",
+            `${AI_BASE_URL}/api/tts`,
             { text: req.body.text },
             { responseType: "stream" }
         );

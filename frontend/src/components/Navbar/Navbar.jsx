@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaBars, FaTimes, FaSun, FaMoon, FaHome, FaTachometerAlt, FaInfoCircle,  } from "react-icons/fa";
 import './Navbar.css';
 import axios from 'axios';
+import API_URL from '../../utils/apiConfig';
 
 const Navbar = ({ darkMode, setDarkMode }) => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           const authToken = sessionStorage.getItem("auth-token");
           if (authToken) {
             try {
-              const response = await axios.post('http://localhost:5000/api/auth/getuser', {}, {
+              const response = await axios.post(`${API_URL}/api/auth/getuser`, {}, {
                 headers: { 'auth-token': authToken }
               });
               setUserName(response.data.name);
