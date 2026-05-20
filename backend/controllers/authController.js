@@ -3,7 +3,8 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = "KohliGoesDownTheGround";
+// Read JWT_SECRET from environment variable (set in .env or by docker-compose)
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
 // Controller for user signup
 const signup = async (req, res) => {

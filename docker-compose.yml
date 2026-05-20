@@ -33,11 +33,9 @@ services:
     restart: unless-stopped
     ports:
       - "5000:5000"
-    environment:
-      - NODE_ENV=production
-      - AI_BASE_URL=http://ai_services:5001
-      - MONGO_URI=${MONGO_URI:-mongodb://host.docker.internal:27017/TRAVIS}
-      - JWT_SECRET=${JWT_SECRET:-dev-secret}
+    env_file:
+      - .env
+    # Removed: hardcoded AI_BASE_URL and NODE_ENV — both come from .env via env_file
     depends_on:
       ai_services:
         condition: service_healthy
@@ -53,7 +51,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=http://backend:5000
+        # ${REACT_APP_API_URL} reads from .env — no hardcoded fallback here
+        - REACT_APP_API_URL=${REACT_APP_API_URL}
     container_name: travis-frontend
     restart: unless-stopped
     ports:

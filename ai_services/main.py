@@ -64,17 +64,43 @@ _try_include("rag", _load_rag)
 
 @app.on_event("startup")
 async def warmup():
-    print("\n[main] Warming up RAG components ...")
+    print("\n[main] Warming up all ML models ...")
 
-    # 1. Load embedding model into memory
+    # 1. QA Model (Bank Transformer)
+    try:
+        from bank.qa_routes import generate_response
+        generate_response("what is a bank account")
+        print("[main] QA model warm.")
+    except Exception as e:
+        print(f"[main] QA warmup failed: {e}")
+
+    # 2. Translation Model (lazy-load on first request)
+    try:
+        from translation.translate_routes import _load_custom_model
+        if _load_custom_model():
+            print("[main] Translation model warm.")
+        else:
+            print("[main] Translation model fallback enabled (deep-translator).")
+    except Exception as e:
+        print(f"[main] Translation warmup failed: {e}")
+
+    # 3. Intent Classifier
+    try:
+        from category.classifer_routes import predict_category, model, vocab, label_encoder
+        predict_category("what is my balance", model, vocab, label_encoder)
+        print("[main] Classifier model warm.")
+    except Exception as e:
+        print(f"[main] Classifier warmup failed: {e}")
+
+    # 4. Load RAG embedding model into memory
     try:
         from rag.embedder import get_model
         get_model()                        # loads SentenceTransformer once
-        print("[main] Embedding model warm.")
+        print("[main] RAG embedding model warm.")
     except Exception as e:
         print(f"[main] Embedder warmup failed: {e}")
 
-    # 2. Connect to ChromaDB collection
+    # 5. Connect to ChromaDB collection
     try:
         from rag.retriever import _get_collection
         col = _get_collection()            # opens PersistentClient once
@@ -82,7 +108,7 @@ async def warmup():
     except Exception as e:
         print(f"[main] ChromaDB warmup failed (run ingest.py first): {e}")
 
-    # 3. Run one dummy embed+retrieve so internal caches are hot
+    # 6. Run one dummy embed+retrieve so internal caches are hot
     try:
         from rag.embedder import embed_query
         from rag.retriever import retrieve

@@ -2,27 +2,22 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Create non-root user
 RUN addgroup -S travis && adduser -S travis -G travis
 
-# Copy package files first (layer cache — only reinstalls if package.json changes)
 COPY package.json package-lock.json* ./
-
-# Install production dependencies only
 RUN npm ci --only=production
 
-# Copy source code
 COPY . .
 
-# Give ownership to non-root user
 RUN chown -R travis:travis /app
 
 USER travis
 
-# AI_BASE_URL is intentionally NOT baked in at build time.
-# Set it at runtime via docker-compose environment or docker run -e.
-# Default points to the ai_services service name used in docker-compose.
-ENV AI_BASE_URL=http://ai_services:5001
+# Removed: MONGO_URI, JWT_SECRET, AI_BASE_URL — never bake secrets into images.
+# NODE_ENV is set in .env and passed in by docker-compose env_file.
+# This ENV block only sets non-sensitive, container-topology defaults
+# that have no meaning outside Docker and carry no secret value.
+ENV NODE_ENV=production
 
 EXPOSE 5000
 

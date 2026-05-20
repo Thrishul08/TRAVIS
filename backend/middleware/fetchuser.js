@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "KohliGoesDownTheGround";
+
+// Read JWT_SECRET from environment variable (set in .env or by docker-compose)
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
 const fetchuser = (req, res, next) => {
     // getting user from JWT token & add ID to req object
