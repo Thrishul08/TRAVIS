@@ -38,9 +38,9 @@ const Home = ({ darkMode }) => {
             <span className="hero-title-prefix">Meet</span>
             <span className="hero-title-main">TRAVIS</span>
           </h1>
-          <h2 className="hero-subtitle">Transformer-based Assistant for Visually Impaired Service Agents</h2>
+          <h2 className="hero-subtitle">Transformer-based Assistant for Service Agents</h2>
           <p className="hero-description">
-            Empowering visually impaired bank representatives with AI-driven assistance to provide exceptional customer
+            Empowering bank representatives with AI-driven assistance to provide exceptional customer
             service
           </p>
           <div className="hero-buttons">
@@ -80,7 +80,7 @@ const Home = ({ darkMode }) => {
             </div>
             <h3 className="feature-title">Accessibility Focused</h3>
             <p className="feature-description">
-              Designed specifically for visually impaired bank representatives to navigate with ease
+              Designed specifically for bank representatives to navigate with ease
             </p>
           </div>
 
@@ -148,7 +148,7 @@ const Home = ({ darkMode }) => {
               <div>
                 <h3 className="benefit-title">Enhanced Productivity</h3>
                 <p className="benefit-description">
-                  Enables visually impaired agents to handle customer queries efficiently
+                  Enables service agents to handle customer queries efficiently
                 </p>
               </div>
             </li>
@@ -166,7 +166,7 @@ const Home = ({ darkMode }) => {
               <div>
                 <h3 className="benefit-title">Inclusive Workplace</h3>
                 <p className="benefit-description">
-                  Creates opportunities for visually impaired individuals in customer service
+                  Creates opportunities for individuals in customer service
                 </p>
               </div>
             </li>
@@ -191,7 +191,7 @@ const Home = ({ darkMode }) => {
         <div className="cta-content">
           <h2 className="cta-title">Ready to Transform Customer Service?</h2>
           <p className="cta-description">
-            Join us in empowering visually impaired service agents with cutting-edge AI technology
+            Join us in empowering service agents with cutting-edge AI technology
           </p>
           <button className="primary-button cta-button" onClick={handleGetStarted}>
             {isLoggedIn ? "Access Dashboard" : "Get Started Now"} <FaArrowRight className="button-icon" />

@@ -8,7 +8,7 @@ const About = memo(() => {
       <div className="about-container">
         <div className="about-header">
           <h1>About TRAVIS</h1>
-          <p className="about-subtitle">TRansformer-based Assistant for VIsually Impaired Service agents</p>
+          <p className="about-subtitle">Transformer-based Assistant for Service agents</p>
         </div>
         
         <div className="about-content">
@@ -19,7 +19,7 @@ const About = memo(() => {
             <div className="card-content">
               <h2>Our Mission</h2>
               <p>
-                TRAVIS is designed to empower visually impaired banking professionals with cutting-edge AI technology, 
+                TRAVIS is designed to empower banking professionals with cutting-edge AI technology, 
                 enabling them to provide exceptional customer service with confidence and efficiency.
               </p>
             </div>
@@ -60,8 +60,7 @@ const About = memo(() => {
             <div className="card-content">
               <h2>Our Vision</h2>
               <p>
-                We believe in creating an inclusive workplace where visual impairment is not a barrier to professional 
-                success. TRAVIS demonstrates our commitment to developing technology that expands employment opportunities 
+                TRAVIS demonstrates our commitment to developing technology that expands employment opportunities 
                 and enhances workplace accessibility for all individuals.
               </p>
             </div>
@@ -85,7 +84,7 @@ const About = memo(() => {
         
         <div className="about-cta">
           <h3>Experience the TRAVIS Advantage</h3>
-          <p>Discover how our AI-powered solution is transforming customer service capabilities for visually impaired banking professionals.</p>
+          <p>Discover how our AI-powered solution is transforming customer service capabilities for banking professionals.</p>
           <button className="primary-button cta-button">Request Demo <FaArrowRight className="button-icon" /></button>
         </div>
       </div>

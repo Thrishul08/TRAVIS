@@ -1,4 +1,4 @@
-# 🧠 TRAVIS — AI-Powered Assistant for Visually Impaired Service Agents
+# 🧠 TRAVIS — AI-Powered Assistant for Bank Service Agents
 
 <div align="center">
 
@@ -8,7 +8,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-16.0+-green.svg)](https://nodejs.org)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
 
-**TRAVIS** is a voice-driven, AI-powered banking assistant designed to empower visually impaired bank agents. It processes spoken queries, classifies them using transformer models, retrieves customer data when needed, and augments responses with knowledge base information — providing an accessible interface with full voice and visual support.
+**TRAVIS** is a voice-driven, AI-powered banking assistant designed to empower bank agents. It processes spoken queries, classifies them using transformer models, retrieves customer data when needed, and augments responses with knowledge base information — providing an accessible interface with full voice and visual support.
 
 </div>
 
@@ -442,7 +442,7 @@ For FAQ-style queries, TRAVIS uses Retrieval-Augmented Generation (RAG) to find 
 
 ### 👤 Agent & Admin Dashboard
 
-- **Agent Profile** — Accessible dashboard optimised for visually impaired agents
+- **Agent Profile** — Accessible dashboard optimised for service agents
 - **Admin Panel** — Full customer management with CRUD operations
 - **Query History** — Track previous queries and their responses
 
